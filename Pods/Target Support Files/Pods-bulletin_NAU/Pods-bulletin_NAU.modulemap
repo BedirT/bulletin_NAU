@@ -1,0 +1,6 @@
+framework module Pods_bulletin_NAU {
+  umbrella header "Pods-bulletin_NAU-umbrella.h"
+
+  export *
+  module * { export * }
+}

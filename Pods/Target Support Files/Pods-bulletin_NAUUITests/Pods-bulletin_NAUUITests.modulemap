@@ -1,0 +1,6 @@
+framework module Pods_bulletin_NAUUITests {
+  umbrella header "Pods-bulletin_NAUUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
