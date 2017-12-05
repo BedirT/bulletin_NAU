@@ -52,11 +52,14 @@ class LoginController: UIViewController {
         }
         
         Auth.auth().signIn(withEmail: email, password: password, completion: {
-            (user, error) in
+            (user , error) in
+            
+            
             if error != nil {
                 print(error!)
                 return
             }
+            print("IN")
             
             self.dismiss(animated: true, completion: nil)
         })
@@ -69,7 +72,7 @@ class LoginController: UIViewController {
         }
 
         Auth.auth().createUser(withEmail: email, password: password, completion: {
-            (user: User?, error) in
+            (user, error) in
 
             if error != nil {
                 print(error!)
