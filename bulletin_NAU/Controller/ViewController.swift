@@ -14,13 +14,20 @@ class ViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        let ref = Database.database().reference(fromURL: "https://bulletin-nau.firebaseio.com/")
-//        ref.updateChildValues(["someValue": 123123])
-        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logoutHandle))
+        
+        if(Auth.auth().currentUser?.uid == nil) {
+            perform(#selector(logoutHandle), with: nil, afterDelay: 0)
+        }
     }
     
     @objc func logoutHandle (){
+        do {
+            try Auth.auth().signOut()
+        }catch let logoutError{
+            print(logoutError)
+        }
+        
         let loginController = LoginController()
         present(loginController, animated: true, completion: nil)
     }
