@@ -65,39 +65,6 @@ class LoginController: UIViewController {
         })
     }
     
-    func handleRegister() {
-        guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else {
-            print("Form is not valid")
-            return
-        }
-
-        Auth.auth().createUser(withEmail: email, password: password, completion: {
-            (user, error) in
-
-            if error != nil {
-                print(error!)
-                return
-            }
-            
-            guard let uid = user?.uid else {
-                return
-            }
-            
-            let ref = Database.database().reference(fromURL: "https://bulletin-nau.firebaseio.com/")
-            let usersReference = ref.child("users").child(uid)
-            let values = ["name": name, "email": email]
-            usersReference.updateChildValues(values, withCompletionBlock: {
-                (error, ref) in
-                if error != nil {
-                    print(error!)
-                    return
-                }
-                print("Saved succesfully!")
-            })
-        })
-        
-    }
-    
     let nameTextField: UITextField = {
         let txtField = UITextField()
         txtField.placeholder = "Name"
@@ -134,15 +101,18 @@ class LoginController: UIViewController {
         return txtField
     }()
     
-    let profilePicture : UIImageView = {
+    lazy var profilePicture : UIImageView = {
         let img = UIImageView()
         img.image = UIImage(named: "nau_seal")
         img.translatesAutoresizingMaskIntoConstraints = false
         img.contentMode = .scaleAspectFill
+        print("HERE1")
+        img.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectingProfileImageView)))
+        img.isUserInteractionEnabled = true
         return img
     }()
     
-    let loginRegisterSegmentedControl: UISegmentedControl = {
+    lazy var loginRegisterSegmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Login", "Register"])
         sc.tintColor = UIColor.white
         sc.selectedSegmentIndex = 1
