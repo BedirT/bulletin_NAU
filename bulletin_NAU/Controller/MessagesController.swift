@@ -50,7 +50,7 @@ class MessagesController: UITableViewController {
     }
     
     func setupNavbarWithUser(_ user: User) {
-        let titleView = UIView()
+        let titleView = UIButton()
         titleView.frame = CGRect.init(x: 0,y :0, width: 100, height: 40)
         
         let containerView = UIView()
@@ -93,9 +93,17 @@ class MessagesController: UITableViewController {
         containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
         
         self.navigationItem.titleView = titleView
+        
+        titleView.addTarget(self, action: #selector(showChatController), for: .touchUpInside)
     }
     
-    @objc func logoutHandle (){
+    @objc func showChatController() {
+        print("123")
+        let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
+        navigationController?.pushViewController(chatLogController, animated: true)
+    }
+    
+    @objc func logoutHandle() {
         do {
             try Auth.auth().signOut()
         }catch let logoutError{
