@@ -160,8 +160,8 @@
 		01CE6E171FD6745900EB4B01 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				01CE6DEA1FD66F8500EB4B01 /* MessagesController.swift */,
 				01CE6E181FD6747900EB4B01 /* LoginController.swift */,
+				01CE6DEA1FD66F8500EB4B01 /* MessagesController.swift */,
 				01F9AD0F1FD6B0450059CBBE /* NewMessageController.swift */,
 				01F9AD141FD7E2980059CBBE /* loginController+handlers.swift */,
 			);

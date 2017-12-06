@@ -31,9 +31,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             }
             
             let imageName = NSUUID().uuidString
-            let storageRef = Storage.storage().reference().child("profileImages").child("\(imageName).png")
+            let storageRef = Storage.storage().reference().child("profileImages").child("\(imageName).jpg")
             
-            if let uploadData = UIImagePNGRepresentation(self.profilePicture.image!) {
+            if let profileImage = self.profilePicture.image, let uploadData = UIImageJPEGRepresentation(profileImage, 0.1) {
+//            if let uploadData = UIImagePNGRepresentation(self.profilePicture.image!) { // File Compression added
                 storageRef.putData(uploadData, metadata: nil, completion: {
                     (metadata, error) in
                     
@@ -52,7 +53,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     private func registerUserIntoDBwithUID(uid: String, values: [String: AnyObject]){
         let ref = Database.database().reference(fromURL: "https://bulletin-nau.firebaseio.com/")
         let usersReference = ref.child("users").child(uid)
-//        let values = ["name": name, "email": email, "profileImageUrl": metadata.downloadURL()]
         usersReference.updateChildValues(values, withCompletionBlock: {
             (error, ref) in
             if error != nil {
@@ -60,6 +60,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 return
             }
             print("Saved succesfully!")
+//            self.messagesController?.fetchUserAndSetupNavbarTitle()
+            self.messagesController?.navigationItem.title = values["name"] as? String
+            self.dismiss(animated: true, completion: nil)
+            
         })
     }
     
