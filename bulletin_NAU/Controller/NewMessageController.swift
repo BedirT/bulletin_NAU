@@ -11,6 +11,7 @@ import Firebase
 
 class NewMessageController: UITableViewController {
 
+    var messagesController: MessagesController?
     let cellID = "cellId"
     var users = [User]()
     
@@ -30,12 +31,12 @@ class NewMessageController: UITableViewController {
         query.observe(.value) { (snapshot) in
             for child in snapshot.children.allObjects as! [DataSnapshot] {
                 if let value = child.value as? NSDictionary {
-                    let user = User()
-                    user.name = value["name"] as? String ?? "Name not found"
-                    user.email = value["email"] as? String ?? "Email not found"
-                    user.profileImageUrl = value["profileImageUrl"] as? String ?? "Image not found"
-//                    user.name = name
-//                    user.email = email
+                    let user = User(value as! [String : AnyObject])
+                    user.id = child.key
+//                    user.name = value["name"] as? String ?? "Name not found"
+//                    user.email = value["email"] as? String ?? "Email not found"
+//                    user.profileImageUrl = value["profileImageUrl"] as? String ?? "Image not found"
+                    
                     self.users.append(user)
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
@@ -62,19 +63,6 @@ class NewMessageController: UITableViewController {
         if let profileImageUrl = user.profileImageUrl {
             
             cell.profileImageView.loadImageUsingCacheWithURLString(urlString: profileImageUrl)
-            
-//            let url = URL(string: profileImageUrl)
-//            URLSession.shared.dataTask(with: url!, completionHandler: {
-//                (data, response, error) in
-//                if error != nil {
-//                    print (error!)
-//                    return
-//                }
-//                DispatchQueue.main.async{
-//                    cell.profileImageView.image = UIImage(data: data!)
-//                }
-//
-//            }).resume()
         }
         
         return cell
@@ -82,6 +70,16 @@ class NewMessageController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 72
+    }
+    
+    
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        dismiss(animated: true){
+            print("Dissmiss completed")
+            let user = self.users[indexPath.row]
+            self.messagesController?.showChatControllerForUser(user)
+        }
     }
 }
 
@@ -116,4 +114,6 @@ class UserCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    
 }

@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 class MessagesController: UITableViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -19,10 +19,40 @@ class MessagesController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: iconNewMessage, style: .plain, target: self, action: #selector(newMessageHandle))
         
         checkIfLoggedIn()
+        
+        observeMessages()
+    }
+    
+    var messages = [Message]()
+    
+    func observeMessages(){
+        let ref = Database.database().reference().child("messages")
+        ref.observe(.childAdded) {
+            (snapshot) in
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                let message = Message(dictionary: dictionary)
+                self.messages.append(message)
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return messages.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellID")
+        let message = messages[indexPath.row]
+        cell.textLabel?.text = message.text
+        return cell
     }
     
     @objc func newMessageHandle(){
         let newMessageController = NewMessageController()
+        newMessageController.messagesController = self
         let navController = UINavigationController(rootViewController: newMessageController)
         present(navController, animated: true, completion: nil)
     }
@@ -93,13 +123,11 @@ class MessagesController: UITableViewController {
         containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
         
         self.navigationItem.titleView = titleView
-        
-        titleView.addTarget(self, action: #selector(showChatController), for: .touchUpInside)
     }
     
-    @objc func showChatController() {
-        print("123")
+    @objc func showChatControllerForUser(_ user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
+        chatLogController.user = user
         navigationController?.pushViewController(chatLogController, animated: true)
     }
     
