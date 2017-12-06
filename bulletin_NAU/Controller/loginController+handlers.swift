@@ -123,4 +123,29 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         dismiss(animated: true, completion: nil)
     }
     
+    
+    
+    @objc func handleLoginRegisterChange() {
+        let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
+        loginRegisterButton.setTitle(title, for: .normal)
+        
+        inputsContainerViewHeightAnchor?.constant = loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 100 : 150
+        
+        nameTextFieldViewHeightAnchor?.isActive = false
+        nameTextFieldViewHeightAnchor = nameTextField.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1/3)
+        nameTextFieldViewHeightAnchor?.isActive = true
+        
+        nameSeperatorHeightAnchor?.isActive = false
+        nameSeperatorHeightAnchor = nameSeperator.heightAnchor.constraint(equalToConstant: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1)
+        nameSeperatorHeightAnchor?.isActive = true
+        
+        emailTextFieldViewHeightAnchor?.isActive = false
+        emailTextFieldViewHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/3)
+        emailTextFieldViewHeightAnchor?.isActive = true
+        
+        passwordTextFieldViewHeightAnchor?.isActive = false
+        passwordTextFieldViewHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/3)
+        passwordTextFieldViewHeightAnchor?.isActive = true
+    }
+    
 }
