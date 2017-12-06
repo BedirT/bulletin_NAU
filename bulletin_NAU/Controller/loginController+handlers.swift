@@ -60,8 +60,8 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 return
             }
             print("Saved succesfully!")
-//            self.messagesController?.fetchUserAndSetupNavbarTitle()
-            self.messagesController?.navigationItem.title = values["name"] as? String
+            let user = User(values)
+            self.messagesController?.setupNavbarWithUser(user)
             self.dismiss(animated: true, completion: nil)
             
         })
