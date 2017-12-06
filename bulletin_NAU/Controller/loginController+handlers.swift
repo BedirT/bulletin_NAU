@@ -48,9 +48,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 })
             }
         })
-        
     }
-    
     private func registerUserIntoDBwithUID(uid: String, values: [String: AnyObject]){
         let ref = Database.database().reference(fromURL: "https://bulletin-nau.firebaseio.com/")
         let usersReference = ref.child("users").child(uid)
