@@ -12,14 +12,14 @@ class Message: NSObject {
 
     var fromID: String?
     var text: String?
-    var timeStamp: Int?
+    var timeStamp: NSNumber?
     var toID: String?
     
     init(dictionary: [String : AnyObject]) {
         super.init()
         fromID = dictionary["fromId"] as? String ?? "No Sender"
         text = dictionary["text"] as? String ?? "No Message"
-        timeStamp = dictionary["timeStamp"] as? Int? ?? 0
+        timeStamp = dictionary["timeStamp"] as? NSNumber? ?? 0
         toID = dictionary["toId"] as? String ?? "No Receiver"
     }
     

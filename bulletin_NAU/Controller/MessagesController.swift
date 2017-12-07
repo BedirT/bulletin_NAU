@@ -11,6 +11,8 @@ import Firebase
 
 class MessagesController: UITableViewController {
     
+    let cellID = "cellId"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -20,10 +22,13 @@ class MessagesController: UITableViewController {
         
         checkIfLoggedIn()
         
+        tableView.register(UserCell.self, forCellReuseIdentifier: cellID)
+        
         observeMessages()
     }
     
     var messages = [Message]()
+    var messagesDictionary = [String: Message]()
     
     func observeMessages(){
         let ref = Database.database().reference().child("messages")
@@ -31,7 +36,16 @@ class MessagesController: UITableViewController {
             (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary)
-                self.messages.append(message)
+//                self.messages.append(message)
+                
+                if let toID = message.toID {
+                    self.messagesDictionary[toID] = message
+                    self.messages = Array(self.messagesDictionary.values)
+                    self.messages.sort(by: {  (message1, message2) -> Bool in
+                        return message1.timeStamp!.intValue > message2.timeStamp!.intValue
+                    })
+                }
+                
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
@@ -44,10 +58,16 @@ class MessagesController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellID")
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! UserCell
+        
         let message = messages[indexPath.row]
-        cell.textLabel?.text = message.text
+        cell.message = message
+        
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 72
     }
     
     @objc func newMessageHandle(){
@@ -72,7 +92,6 @@ class MessagesController: UITableViewController {
         Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: {
             (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
-//                self.navigationItem.title = dictionary["name"] as? String
                 let current_user = User(dictionary)
                 self.setupNavbarWithUser(current_user)
             }
