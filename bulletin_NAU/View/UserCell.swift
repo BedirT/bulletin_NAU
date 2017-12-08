@@ -13,28 +13,37 @@ class UserCell: UITableViewCell {
     
     var message: Message? {
         didSet {
-            if let toID = message?.toID {
-                let ref = Database.database().reference().child("users").child(toID)
-                ref.observe(.value){
-                    (snapshot) in
-                    if let dictionary = snapshot.value as? [String: AnyObject]{
-                        self.textLabel?.text = dictionary["name"] as? String
-                        
-                        if let profileImageURL = dictionary["profileImageUrl"] as? String{
-                            self.profileImageView.loadImageUsingCacheWithURLString(urlString: profileImageURL)
-                        }
-                    }
-                }
-            }
-            
+            setupNameAndProfilePicture()
             self.detailTextLabel?.text = message?.text
-            
-            
             if let seconds = message?.timeStamp?.doubleValue {
                 let timeStampDate = Date(timeIntervalSince1970: seconds)
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "hh:mm"
                 timeLabel.text = dateFormatter.string(from: timeStampDate)
+            }
+        }
+    }
+    
+    private func setupNameAndProfilePicture(){
+        let chatPartnerId: String?
+        
+        if message?.fromID == Auth.auth().currentUser?.uid {
+            chatPartnerId = message?.toID
+        } else {
+            chatPartnerId = message?.fromID
+        }
+        
+        if let toID = chatPartnerId {
+            let ref = Database.database().reference().child("users").child(toID)
+            ref.observe(.value){
+                (snapshot) in
+                if let dictionary = snapshot.value as? [String: AnyObject]{
+                    self.textLabel?.text = dictionary["name"] as? String
+                    
+                    if let profileImageURL = dictionary["profileImageUrl"] as? String{
+                        self.profileImageView.loadImageUsingCacheWithURLString(urlString: profileImageURL)
+                    }
+                }
             }
         }
     }
@@ -56,8 +65,7 @@ class UserCell: UITableViewCell {
     }()
     
     let timeLabel: UILabel = {
-       let label = UILabel()
-        label.text = "HH:MM:SS"
+        let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = UIColor.darkGray
         label.translatesAutoresizingMaskIntoConstraints = false
