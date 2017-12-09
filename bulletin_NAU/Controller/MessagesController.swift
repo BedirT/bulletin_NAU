@@ -36,51 +36,46 @@ class MessagesController: UITableViewController {
         ref.observe(.childAdded, with: {
             (snapshot) in
             
-            let messageId = snapshot.key
-            let messageReference = Database.database().reference().child("messages").child(messageId)
-            
-            messageReference.observe(.value, with: { (snapshot) in
+            let userID = snapshot.key
+            Database.database().reference().child("user-messages").child(uid).child(userID).observe(.childAdded, with: {
+                (snapshot) in
                 
-                if let dictionary = snapshot.value as? [String: AnyObject] {
-                    let message = Message(dictionary: dictionary)
-                    
-                    if let toID = message.toID {
-                        self.messagesDictionary[toID] = message
-                        self.messages = Array(self.messagesDictionary.values)
-                        self.messages.sort(by: {  (message1, message2) -> Bool in
-                            return message1.timeStamp!.intValue > message2.timeStamp!.intValue
-                        })
-                    }
-                    
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
-                }
+                let messageId = snapshot.key
+                self.fetchMessageWithMessageID(messageId)
                 
             }, withCancel: nil)
         }, withCancel: nil)
     }
     
-    func observeMessages(){
-        let ref = Database.database().reference().child("messages")
-        ref.observe(.childAdded) {
-            (snapshot) in
+    var timer : Timer?
+
+    private func fetchMessageWithMessageID(_ messageId: String) {
+        let messageReference = Database.database().reference().child("messages").child(messageId)
+        messageReference.observe(.value, with: { (snapshot) in
+            
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary)
-//                self.messages.append(message)
                 
-                if let toID = message.toID {
-                    self.messagesDictionary[toID] = message
-                    self.messages = Array(self.messagesDictionary.values)
-                    self.messages.sort(by: {  (message1, message2) -> Bool in
-                        return message1.timeStamp!.intValue > message2.timeStamp!.intValue
-                    })
+                if let chatPartnerId = message.chatPartnerId() {
+                    self.messagesDictionary[chatPartnerId] = message
                 }
-                
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+                self.attemptReloadOfTable()
             }
+        }, withCancel: nil)
+    }
+    
+    private func attemptReloadOfTable(){
+        self.timer?.invalidate()
+        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target:self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+    }
+    
+    @objc func handleReloadTable() {
+        self.messages = Array(self.messagesDictionary.values)
+        self.messages.sort(by: {  (message1, message2) -> Bool in
+            return message1.timeStamp!.intValue > message2.timeStamp!.intValue
+        })
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
         }
     }
     
@@ -90,15 +85,33 @@ class MessagesController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! UserCell
-        
+
         let message = messages[indexPath.row]
-        cell.message = message
         
+        cell.message = message
         return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 72
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let message = messages[indexPath.row]
+        guard let chatPartnerId = message.chatPartnerId() else{
+            return
+        }
+        let ref = Database.database().reference().child("users").child(chatPartnerId)
+        ref.observeSingleEvent(of: .value, with: {
+            (snapshot) in
+            guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                return
+            }
+            let user = User(dictionary)
+            user.id = chatPartnerId
+            self.showChatControllerForUser(user)
+        }, withCancel: nil)
     }
     
     @objc func newMessageHandle(){

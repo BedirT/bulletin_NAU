@@ -16,6 +16,7 @@
 		01CE6E091FD66F8500EB4B01 /* bulletin_NAUUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01CE6E081FD66F8500EB4B01 /* bulletin_NAUUITests.swift */; };
 		01CE6E191FD6747900EB4B01 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01CE6E181FD6747900EB4B01 /* LoginController.swift */; };
 		01CE6E1D1FD6882C00EB4B01 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01CE6E1C1FD6882B00EB4B01 /* GoogleService-Info.plist */; };
+		01F696381FDA6210000E633B /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F696371FDA6210000E633B /* ChatMessageCell.swift */; };
 		01F9AD101FD6B0450059CBBE /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F9AD0F1FD6B0450059CBBE /* NewMessageController.swift */; };
 		01F9AD131FD6B4700059CBBE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F9AD121FD6B4700059CBBE /* User.swift */; };
 		01F9AD151FD7E2980059CBBE /* loginController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F9AD141FD7E2980059CBBE /* loginController+handlers.swift */; };
@@ -61,6 +62,7 @@
 		01CE6E0A1FD66F8500EB4B01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		01CE6E181FD6747900EB4B01 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		01CE6E1C1FD6882B00EB4B01 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
+		01F696371FDA6210000E633B /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		01F9AD0F1FD6B0450059CBBE /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		01F9AD121FD6B4700059CBBE /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		01F9AD141FD7E2980059CBBE /* loginController+handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "loginController+handlers.swift"; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				01F9AD1E1FD8CE410059CBBE /* UserCell.swift */,
+				01F696371FDA6210000E633B /* ChatMessageCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -531,6 +534,7 @@
 				01CE6DE91FD66F8500EB4B01 /* AppDelegate.swift in Sources */,
 				01F9AD131FD6B4700059CBBE /* User.swift in Sources */,
 				01F9AD151FD7E2980059CBBE /* loginController+handlers.swift in Sources */,
+				01F696381FDA6210000E633B /* ChatMessageCell.swift in Sources */,
 				01F9AD101FD6B0450059CBBE /* NewMessageController.swift in Sources */,
 				01F9AD1F1FD8CE410059CBBE /* UserCell.swift in Sources */,
 				01F9AD181FD816FD0059CBBE /* Extensions.swift in Sources */,
@@ -703,7 +707,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = BX9LLBUEW7;
 				INFOPLIST_FILE = bulletin_NAU/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "nau.bulletin-NAU";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -720,7 +724,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = BX9LLBUEW7;
 				INFOPLIST_FILE = bulletin_NAU/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "nau.bulletin-NAU";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -7,20 +7,24 @@
 //
 
 import UIKit
+import Firebase
 
 class Message: NSObject {
 
-    var fromID: String?
+    var fromId: String?
     var text: String?
     var timeStamp: NSNumber?
-    var toID: String?
+    var toId: String?
     
     init(dictionary: [String : AnyObject]) {
         super.init()
-        fromID = dictionary["fromId"] as? String ?? "No Sender"
+        fromId = dictionary["fromId"] as? String ?? "No Sender"
         text = dictionary["text"] as? String ?? "No Message"
         timeStamp = dictionary["timeStamp"] as? NSNumber? ?? 0
-        toID = dictionary["toId"] as? String ?? "No Receiver"
+        toId = dictionary["toId"] as? String ?? "No Receiver"
     }
     
+    func chatPartnerId() -> String? {
+        return fromId == Auth.auth().currentUser?.uid ? toId : fromId
+    }
 }
