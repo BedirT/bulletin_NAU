@@ -69,7 +69,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     
     @objc func handleSelectingProfileImageView() {
         let picker = UIImagePickerController()
-        print("HERE2")
         
         picker.delegate = self
         picker.allowsEditing = true
@@ -133,6 +132,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
         loginRegisterButton.setTitle(title, for: .normal)
         
+        profilePictureChangeButton.isHidden = loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? true : false
         inputsContainerViewHeightAnchor?.constant = loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 100 : 150
         
         nameTextFieldViewHeightAnchor?.isActive = false

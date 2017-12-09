@@ -75,6 +75,8 @@ class ChatMessageCell: UICollectionViewCell {
         textView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 8).isActive = true
         textView.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
         
+        self.isUserInteractionEnabled = false
+        
     }
     
     required init?(coder aDecoder: NSCoder) {

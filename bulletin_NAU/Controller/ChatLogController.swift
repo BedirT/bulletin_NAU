@@ -65,6 +65,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.keyboardDismissMode = .interactive
+        self.hideKeyboardWhenTappedAround()
     }
     
     lazy var inputContainerView: UIView = {

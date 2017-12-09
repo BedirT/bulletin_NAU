@@ -12,12 +12,17 @@ import Firebase
 class LoginController: UIViewController {
     
     var messagesController: MessagesController?
+    
+    let mainRedColor: UIColor? = UIColor(r: 252,g: 67,b: 73)
+    let mainLightBlueColor: UIColor? = UIColor(r: 215,g: 218,b: 219)
+    let mainDarkBlueColor: UIColor? = UIColor(r: 44,g: 62,b: 80)
+    // Text Color = UIColor(r: 181,g: 186,b: 191)
 
     let inputContainerView: UIView = {
         let view = UIView()
         
         // BG
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor(r: 215,g: 218,b: 219)
         view.translatesAutoresizingMaskIntoConstraints = false
         
         // Round corners
@@ -29,11 +34,13 @@ class LoginController: UIViewController {
     
     let loginRegisterButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor(r: 80, g: 101, b: 161)
+        button.backgroundColor = UIColor(r: 252,g: 67,b: 73)
         button.setTitle("Register", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor.white, for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.layer.cornerRadius = 5
+        button.layer.masksToBounds = true
+        button.titleLabel?.font = UIFont(name: "Avenir", size: 16)
         button.addTarget(self, action: #selector(handleRegisterLogin), for: .touchUpInside)
         return button
     }()
@@ -69,13 +76,14 @@ class LoginController: UIViewController {
     let nameTextField: UITextField = {
         let txtField = UITextField()
         txtField.placeholder = "Name"
+        txtField.textColor = UIColor(r: 181,g: 186,b: 191)
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
     }()
     
     let nameSeperator: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        view.backgroundColor = UIColor(r: 181,g: 186,b: 191)
         view.translatesAutoresizingMaskIntoConstraints  = false
         return view
     }()
@@ -83,13 +91,14 @@ class LoginController: UIViewController {
     let emailTextField: UITextField = {
         let txtField = UITextField()
         txtField.placeholder = "Email"
+        txtField.textColor = UIColor(r: 181,g: 186,b: 191)
         txtField.translatesAutoresizingMaskIntoConstraints = false
         return txtField
     }()
     
     let emailSeperator: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        view.backgroundColor = UIColor(r: 181,g: 186,b: 191)
         view.translatesAutoresizingMaskIntoConstraints  = false
         return view
     }()
@@ -97,6 +106,7 @@ class LoginController: UIViewController {
     let passwordTextField: UITextField = {
         let txtField = UITextField()
         txtField.placeholder = "Password"
+        txtField.textColor = UIColor(r: 181,g: 186,b: 191)
         txtField.translatesAutoresizingMaskIntoConstraints = false
         txtField.isSecureTextEntry = true
         return txtField
@@ -104,18 +114,28 @@ class LoginController: UIViewController {
     
     lazy var profilePicture : UIImageView = {
         let img = UIImageView()
-        img.image = UIImage(named: "nau_seal")
+        img.image = UIImage(named: "ProfilePHolder")
+        img.layer.cornerRadius = 75
+        img.layer.masksToBounds = true
         img.translatesAutoresizingMaskIntoConstraints = false
-        img.contentMode = .scaleAspectFill
-        print("HERE1")
-        img.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectingProfileImageView)))
-        img.isUserInteractionEnabled = true
+        img.contentMode = .scaleAspectFit
         return img
+    }()
+    
+    lazy var profilePictureChangeButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Add Photo", for: .normal)
+        button.titleLabel?.font =  UIFont(name: "Avenir Light", size: 12)
+        button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 20.0, 0.0)
+        button.backgroundColor = UIColor(red: 44/255, green: 62/255, blue: 80/255, alpha: 0.7)
+        button.addTarget(self, action: #selector(handleSelectingProfileImageView), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     lazy var loginRegisterSegmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Login", "Register"])
-        sc.tintColor = UIColor.white
+        sc.tintColor = mainLightBlueColor
         sc.selectedSegmentIndex = 1
         sc.addTarget(self, action: #selector(handleLoginRegisterChange), for: .valueChanged)
         sc.translatesAutoresizingMaskIntoConstraints = false
@@ -124,12 +144,14 @@ class LoginController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(r:61, g:91, b:151)
+        view.backgroundColor = mainDarkBlueColor
         
         // Login-Register segment added
         view.addSubview(loginRegisterSegmentedControl)
         // pp field is added
         view.addSubview(profilePicture)
+        // pp button added
+        view.addSubview(profilePictureChangeButton)
         // Input textfield is added
         view.addSubview(inputContainerView)
         // Register Button added
@@ -145,6 +167,9 @@ class LoginController: UIViewController {
         setupRegisterButtonContainerView()
         setupProfilePictureView()
         setupLoginRegisterView()
+        setupProfilePictureChangerButton()
+        
+        self.hideKeyboardWhenTappedAround()
         
     }
     
@@ -157,9 +182,16 @@ class LoginController: UIViewController {
     
     func setupProfilePictureView(){
         profilePicture.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        profilePicture.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -15).isActive = true
+        profilePicture.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -20).isActive = true
         profilePicture.widthAnchor.constraint(equalToConstant: 150).isActive = true
         profilePicture.heightAnchor.constraint(equalToConstant: 150).isActive = true
+    }
+    
+    func setupProfilePictureChangerButton(){
+        profilePictureChangeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        profilePictureChangeButton.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -20).isActive = true
+        profilePictureChangeButton.widthAnchor.constraint(equalTo: profilePicture.widthAnchor).isActive = true
+        profilePictureChangeButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
     }
     
     var inputsContainerViewHeightAnchor: NSLayoutConstraint?
@@ -174,7 +206,7 @@ class LoginController: UIViewController {
         // X - Center
         inputContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         // Y - Center
-        inputContainerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        inputContainerView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 20).isActive = true
         // Height
         inputContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -36).isActive = true
         // Width
@@ -190,9 +222,9 @@ class LoginController: UIViewController {
         nameTextFieldViewHeightAnchor?.isActive = true
         
         // Name Seperator
-        nameSeperator.leftAnchor.constraint(equalTo: inputContainerView.leftAnchor).isActive = true
+        nameSeperator.centerXAnchor.constraint(equalTo: inputContainerView.centerXAnchor).isActive = true
         nameSeperator.topAnchor.constraint(equalTo: nameTextField.bottomAnchor).isActive = true
-        nameSeperator.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor).isActive = true
+        nameSeperator.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor, constant: -20).isActive = true
         nameSeperatorHeightAnchor = nameSeperator.heightAnchor.constraint(equalToConstant: 1)
         nameSeperatorHeightAnchor?.isActive = true
 
@@ -204,9 +236,9 @@ class LoginController: UIViewController {
         emailTextFieldViewHeightAnchor?.isActive = true
 
         // Email Seperator
-        emailSeperator.leftAnchor.constraint(equalTo: inputContainerView.leftAnchor).isActive = true
+        emailSeperator.centerXAnchor.constraint(equalTo: inputContainerView.centerXAnchor).isActive = true
         emailSeperator.topAnchor.constraint(equalTo: emailTextField.bottomAnchor).isActive = true
-        emailSeperator.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor).isActive = true
+        emailSeperator.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor, constant: -20).isActive = true
         emailSeperator.heightAnchor.constraint(equalToConstant: 1).isActive = true
 
         // Password:
@@ -228,7 +260,7 @@ class LoginController: UIViewController {
         // Height
         loginRegisterButton.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor).isActive = true
         // Width
-        loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        loginRegisterButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle{
