@@ -30,6 +30,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         userMessagesRef.observe(.childAdded, with: { (snapshot) in
             
             let messageId = snapshot.key
+            
             let messagesRef = Database.database().reference().child("messages").child(messageId)
             messagesRef.observeSingleEvent(of: .value, with: {
                 (snapshot) in
@@ -60,14 +61,10 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         super.viewDidLoad()
 
         collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8 , right: 0)
-//        collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 50 , right: 0)
         collectionView?.alwaysBounceVertical = true
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.keyboardDismissMode = .interactive
-        
-//        setupInputComponents()
-//        setupKeyboardComponents()
     }
     
     lazy var inputContainerView: UIView = {
@@ -119,33 +116,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     override var canBecomeFirstResponder : Bool {
         return true
-    }
-    
-    func setupKeyboardComponents () {
-        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardPop), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(true)
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    @objc func handleKeyboardPop (notification: Notification){
-        let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
-        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as AnyObject).doubleValue
-        containerViewBottomAnchor?.constant = -(keyboardFrame?.height)!
-        UIView.animate(withDuration: keyboardDuration!) {
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    @objc func handleKeyboardHide (notification: Notification){
-        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as AnyObject).doubleValue
-        containerViewBottomAnchor?.constant = 0
-        UIView.animate(withDuration: keyboardDuration!) {
-            self.view.layoutIfNeeded()
-        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -204,53 +174,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     var containerViewBottomAnchor: NSLayoutConstraint?
-    
-    func setupInputComponents(){
-        let containerView = UIView()
-        containerView.backgroundColor = UIColor.white
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(containerView)
-        
-        // Constraints
-        containerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        containerViewBottomAnchor = containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        containerViewBottomAnchor?.isActive = true
-        containerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        let sendButton = UIButton(type: .system)
-        sendButton.setTitle("Send", for: .normal)
-        sendButton.translatesAutoresizingMaskIntoConstraints = false
-        sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
-        containerView.addSubview(sendButton)
-        
-        // Constraints - SendButton
-        sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
-        sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        sendButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        sendButton.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
-        
-        containerView.addSubview(inputTextField)
-        
-        // Constraints - InputTextField
-        inputTextField.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 8).isActive = true
-        inputTextField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        inputTextField.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
-        inputTextField.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
-        
-        let inputSeperatorLine = UIView()
-        inputSeperatorLine.translatesAutoresizingMaskIntoConstraints = false
-        inputSeperatorLine.backgroundColor = UIColor(r: 220, g: 220, b: 220)
-        containerView.addSubview(inputSeperatorLine)
-        
-        // Constraints - inputSeperatorLine
-        inputSeperatorLine.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
-        inputSeperatorLine.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
-        inputSeperatorLine.widthAnchor.constraint(equalTo: containerView.widthAnchor).isActive = true
-        inputSeperatorLine.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
-    }
     
     func checkEmpty(message: String) -> Bool {
         for i in message {  // FIND HOW TO IMPLEMENT MESSAGE[0] ON ITS OWN!!!

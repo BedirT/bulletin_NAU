@@ -17,11 +17,8 @@ class NewMessageController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelHandle))
-        
         tableView.register(UserCell.self, forCellReuseIdentifier: cellID)
-        
         fetchUsers()
     }
 
@@ -33,6 +30,9 @@ class NewMessageController: UITableViewController {
                 if let value = child.value as? NSDictionary {
                     let user = User(value as! [String : AnyObject])
                     user.id = child.key
+                    if user.id == Auth.auth().currentUser?.uid {
+                        continue
+                    }
                     self.users.append(user)
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
