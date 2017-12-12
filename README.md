@@ -11,6 +11,6 @@ Messenger application for North American University. An easier and faster way of
 
 <html>
 <body>
-<center><img src="assets/images/11.png"></center>
+<div style="text-align:center"><img src ="assets/images/11.png" /></div>
 </body>
 </html>
