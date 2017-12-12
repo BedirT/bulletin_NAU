@@ -7,6 +7,10 @@ Messenger application for North American University. An easier and faster way of
 **Contents**
 
 - [Demo](https://goo.gl/QRSQc4)
-- [Documentation](https://github.com/nau-bulletin/bulletin_NAU/tree/master/doc/Project/ \Report.pdf)
+- [Documentation](https://github.com/nau-bulletin/bulletin_NAU/blob/master/doc/Project%20Report.pdf)
 
-<center><img src="assets/images/11.png" width="40%"></center>
+<html>
+<body>
+<center><img src="assets/images/11.png"></center>
+</body>
+</html>
