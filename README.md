@@ -6,9 +6,8 @@ Messenger application for North American University. An easier and faster way of
 
 **Contents**
 
-- Demo
-- Documentation
-- About us
+- [Demo](https://goo.gl/QRSQc4)
+- [Documentation](https://github.com/nau-bulletin/bulletin_NAU/tree/master/doc/Project/ \Report.pdf)
 
-![login](assets/images/login.png)
+![login](assets/images/11.png)
 
